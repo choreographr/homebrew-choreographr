@@ -1,7 +1,10 @@
 # Choreographr — Homebrew formula for the choreographr/homebrew-choreographr tap.
 #
 # Bump procedure per release (keep in lockstep with scripts/release.sh and
-# packaging/aur/PKGBUILD):
+# packaging/aur/PKGBUILD): scripts/update-homebrew-tap.sh automates steps 1-3
+# and 5 (dry-run by default; --push commits + pushes). Step 4 is verifiable in
+# CI via the `homebrew-verify` workflow (a macOS arm64 runner that runs the
+# install + `--version` check), so it no longer needs a physical Mac.
 #   1. Bump `version` to the new release tag (e.g. 0.1.1).
 #   2. Update both `url` lines — tag, filename, and embedded version.
 #   3. Recompute the checksums and paste them into the `sha256` fields:
@@ -16,23 +19,24 @@ class Choreographr < Formula
   homepage "https://choreographr.com"
   version "0.2.0"
 
-  # arm64 (Apple Silicon) is the 0.1.0 macOS target. The x86_64 branch is a
-  # placeholder: Intel macOS tarballs are not shipped in 0.1, but keeping the
-  # branch means adding them later is a one-digest change rather than a
-  # formula restructure.
+  # arm64 (Apple Silicon) is the sole macOS target; the x86_64 branch is a
+  # placeholder so adding an Intel tarball later is a one-digest change rather
+  # than a formula restructure.
   if Hardware::CPU.arm?
     url "https://github.com/choreographr/choreographr/releases/download/v0.2.0/choreographr-0.2.0-aarch64-apple-darwin.tar.gz"
     sha256 "3bc84f0363f766670dd4aabbfaedbc845fe4bbd4e5dbfbe5f653a76ec4bfd9cd"
   else
-    # x86_64 macOS is not shipped in 0.1 — kept for future-proofing.
+    # x86_64 macOS is not shipped yet — kept for future-proofing.
     url "https://github.com/choreographr/choreographr/releases/download/v0.2.0/choreographr-0.2.0-x86_64-apple-darwin.tar.gz"
     sha256 "<sha256-x86_64>"
   end
 
   def install
-    # All four release binaries sit at the tarball root (see scripts/release.sh).
-    # (choreo-mcp is a library-only crate — it ships no binary.)
-    bin.install "choreographr", "choreo-tui", "choreo-im", "choreo-acp"
+    # The shipped release binaries sit at the tarball root (see
+    # scripts/release.sh). The IM/ACP bridges are feature-gated and not in the
+    # tarball; choreo-mcp is a library-only crate — it ships no binary. Keep this
+    # list in lockstep with the release build's binary set.
+    bin.install "choreographr", "choreo-tui"
   end
 
   # Homebrew-managed launchd service (`brew services start choreographr`).
