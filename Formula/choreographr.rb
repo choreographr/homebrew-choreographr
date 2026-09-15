@@ -14,18 +14,18 @@
 class Choreographr < Formula
   desc "Agentic coding assistant — daemon, TUI, and bridges"
   homepage "https://choreographr.com"
-  version "0.1.0"
+  version "0.2.0"
 
   # arm64 (Apple Silicon) is the 0.1.0 macOS target. The x86_64 branch is a
   # placeholder: Intel macOS tarballs are not shipped in 0.1, but keeping the
   # branch means adding them later is a one-digest change rather than a
   # formula restructure.
   if Hardware::CPU.arm?
-    url "https://github.com/choreographr/choreographr/releases/download/v0.1.0/choreographr-0.1.0-aarch64-apple-darwin.tar.gz"
-    sha256 "6868667065443332116656b28cef352b4da2613302f43d402d1ea0925f7d361e"
+    url "https://github.com/choreographr/choreographr/releases/download/v0.2.0/choreographr-0.2.0-aarch64-apple-darwin.tar.gz"
+    sha256 "3bc84f0363f766670dd4aabbfaedbc845fe4bbd4e5dbfbe5f653a76ec4bfd9cd"
   else
     # x86_64 macOS is not shipped in 0.1 — kept for future-proofing.
-    url "https://github.com/choreographr/choreographr/releases/download/v0.1.0/choreographr-0.1.0-x86_64-apple-darwin.tar.gz"
+    url "https://github.com/choreographr/choreographr/releases/download/v0.2.0/choreographr-0.2.0-x86_64-apple-darwin.tar.gz"
     sha256 "<sha256-x86_64>"
   end
 
